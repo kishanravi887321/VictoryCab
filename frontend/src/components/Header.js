@@ -1,73 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import './Header.css';
+import React from 'react';
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const menuItems = [
-    { path: '/', label: 'Home' },
-    { path: '/services', label: 'Services' },
-    { path: '/about', label: 'About' },
-    { path: '/contact', label: 'Contact' }
-  ];
-
   return (
-    <motion.header 
-      className={`header ${isScrolled ? 'scrolled' : ''}`}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6 }}
-    >
-      <div className="container">
-        <div className="nav-wrapper">
-          <Link to="/" className="logo">
-            <i className="fas fa-taxi"></i>
-            <span>SK Victory Cab</span>
-          </Link>
-          
-          <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
-            {menuItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="header-actions">
-            <a href="tel:+1234567890" className="phone-btn">
-              <i className="fas fa-phone"></i>
-              <span>Book Now</span>
-            </a>
-            <button 
-              className="menu-toggle"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-          </div>
+    <header style={{ 
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      right: 0, 
+      background: 'white', 
+      boxShadow: '0 2px 10px rgba(0,0,0,0.1)', 
+      zIndex: 1000,
+      padding: '15px 0'
+    }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '24px' }}>🚗</span>
+          <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#667eea' }}>SK Victory Cab</span>
         </div>
+        
+        <nav style={{ display: 'flex', gap: '30px' }}>
+          <a href="/" style={{ textDecoration: 'none', color: '#374151', fontWeight: '500' }}>Home</a>
+          <a href="/services" style={{ textDecoration: 'none', color: '#374151', fontWeight: '500' }}>Services</a>
+          <a href="/about" style={{ textDecoration: 'none', color: '#374151', fontWeight: '500' }}>About</a>
+          <a href="/contact" style={{ textDecoration: 'none', color: '#374151', fontWeight: '500' }}>Contact</a>
+        </nav>
+        
+        <a href="tel:+919876543210" style={{
+          background: '#667eea', 
+          color: 'white', 
+          padding: '10px 20px', 
+          borderRadius: '25px', 
+          textDecoration: 'none',
+          fontWeight: '500'
+        }}>
+          📞 Book Now
+        </a>
       </div>
-    </motion.header>
+    </header>
   );
 };
 
