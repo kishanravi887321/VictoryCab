@@ -42,22 +42,6 @@ const About = () => {
 };
 
 export default About;
-    { year: '2018', event: 'Digital Platform', description: 'Launched our digital booking platform for better customer experience' },
-    { year: '2020', event: 'Safety Protocols', description: 'Implemented enhanced safety and sanitization protocols' },
-    { year: '2022', event: '500+ Customers', description: 'Reached milestone of serving 500+ satisfied customers' },
-    { year: '2024', event: 'Premium Services', description: 'Introduced luxury vehicle options and premium services' }
-  ];
-
-  const team = [
-    {
-      name: 'SK Saheb Alam',
-      role: 'Founder & CEO',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face',
-      bio: 'With over 15 years in the transportation industry, Saheb founded the company with a vision to provide reliable and safe travel experiences.'
-    },
-    {
-      name: 'Rajesh Kumar',
-      role: 'Operations Manager',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face',
       bio: 'Rajesh ensures smooth operations and maintains our high standards of service quality across all departments.'
     },

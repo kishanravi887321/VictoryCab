@@ -42,22 +42,6 @@ const Services = () => {
 };
 
 export default Services;
-    {
-      id: 'city-tours',
-      icon: 'fas fa-city',
-      title: 'City Tours',
-      description: 'Explore the city with our experienced local guides who know all the hidden gems and popular attractions.',
-      features: [
-        'Experienced local drivers/guides',
-        'Flexible itinerary planning',
-        'Photography assistance',
-        'Multiple language support',
-        'Complimentary bottled water'
-      ],
-      pricing: 'Starting from ₹1200/day',
-      image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=250&fit=crop'
-    },
-    {
       id: 'corporate-travel',
       icon: 'fas fa-briefcase',
       title: 'Corporate Travel',
