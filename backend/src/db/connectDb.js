@@ -4,6 +4,7 @@ import { MongoClient } from 'mongodb';
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
 
 let client;
+
 let database;
 
 export async function connectDb() {
