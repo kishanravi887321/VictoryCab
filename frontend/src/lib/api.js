@@ -19,6 +19,7 @@ const hotels = destinations.slice(0, 4).map((destination, index) => ({
   description: 'A considered stay with local character, thoughtful rooms and warm hosting.',
 }));
 
+
 const activities = destinations.slice(0, 6).map((destination, index) => ({
   id: index + 1,
   name: `${destination.name} through local eyes`,
