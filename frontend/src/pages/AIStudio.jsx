@@ -17,7 +17,7 @@ export default function AIStudio() {
       <div className="mt-16 card p-8">
         <div className="font-display text-2xl font-semibold mb-3">How it stays grounded</div>
         <ol className="space-y-3 text-sm">
-          <li><b>1. Retrieve first.</b> The backend fetches real candidate places, prices, opening hours, and ratings from Postgres.</li>
+          <li><b>1. Start with a feeling.</b> Explore curated places, prices, opening hours, and ratings in one calm workspace.</li>
           <li><b>2. Rank with real math.</b> Scores are computed from Jaccard interest similarity, budget-vs-price fit, rating normalization, and season overlap.</li>
           <li><b>3. Compose only from retrieved data.</b> The itinerary can only reference stops that exist in the DB. Route ordering uses Haversine distance and greedy 2-opt.</li>
           <li><b>4. Cite sources.</b> Chat answers explicitly link to the DB rows they used, so you can verify every claim.</li>
