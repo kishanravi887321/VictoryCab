@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { httpError } from '../utils/httpError.js';
 
-const ROLES = new Set(['TRAVELLER', 'BUSINESS', 'ADMIN']);
+const ROLES = new Set(['TRAVELLER', 'BUSINESS', 'BUSINESS_OWNER', 'TOUR_GUIDE', 'TRAVEL_AGENT', 'ADMIN', 'SUPER_ADMIN']);
 const BUSINESS_STATUSES = new Set(['PENDING', 'VERIFIED', 'REJECTED', 'SUSPENDED']);
 const BOOKING_STATUSES = new Set(['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED']);
 
@@ -43,7 +43,7 @@ function hashPassword(password) {
 
 export function userSchema(input = {}) {
   const role = cleanString(input.role)?.toUpperCase() || 'TRAVELLER';
-  if (!ROLES.has(role)) throw httpError(400, 'role must be TRAVELLER, BUSINESS, or ADMIN');
+  if (!ROLES.has(role)) throw httpError(400, 'Invalid user role');
 
   const user = {
     email: normalizeEmail(input.email),
@@ -216,4 +216,5 @@ export function tripSchema(input = {}) {
     itinerary: Array.isArray(input.itinerary) ? input.itinerary : []
   };
 }
+
 
