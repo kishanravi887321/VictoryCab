@@ -2,6 +2,8 @@ import { ObjectId } from 'mongodb';
 import { getDb } from '../db/connectDb.js';
 import { httpError } from '../utils/httpError.js';
 
+const USER_OWNED_RESOURCES = new Set(['bookings', 'favorites', 'reviews', 'trips', 'search-history', 'notifications']);
+
 function publicRecord(record) {
   if (!record) return record;
   const { _id, passwordHash, ...safeRecord } = record;
@@ -28,12 +30,15 @@ function coerceFilterValue(value) {
   return value;
 }
 
-function queryFilters(request, allowedFilters) {
-  return Object.fromEntries(
+function queryFilters(request, allowedFilters, resource) {
+  const filters = Object.fromEntries(
     allowedFilters
       .filter((key) => request.query[key] !== undefined && request.query[key] !== '')
       .map((key) => [key, coerceFilterValue(request.query[key])])
   );
+
+  if (USER_OWNED_RESOURCES.has(resource) && request.user?.id && !filters.user_id) filters.user_id = request.user.id;
+  return filters;
 }
 
 export function resourceController(resource, schema, options = {}) {
@@ -48,7 +53,7 @@ export function resourceController(resource, schema, options = {}) {
           return response.json(publicRecord(record));
         }
 
-        const filters = queryFilters(request, options.filters || ['destination_id', 'city', 'business_type', 'type', 'category', 'verificationStatus', 'status', 'user_id', 'target_type', 'target_id', 'reported']);
+        const filters = queryFilters(request, options.filters || ['destination_id', 'city', 'business_type', 'type', 'category', 'verificationStatus', 'status', 'user_id', 'target_type', 'target_id', 'reported'], resource);
         const limit = Math.min(Number(request.query.limit) || 50, 100);
         const skip = Number(request.query.offset) || 0;
         const [records, total] = await Promise.all([
@@ -74,7 +79,8 @@ export function resourceController(resource, schema, options = {}) {
     async create(request, response, next) {
       try {
         const now = new Date();
-        const document = { ...schema(request.body), createdAt: now, updatedAt: now };
+        const body = USER_OWNED_RESOURCES.has(resource) && request.user?.id && !request.body.user_id ? { ...request.body, user_id: request.user.id } : request.body;
+        const document = { ...schema(body), createdAt: now, updatedAt: now };
         const result = await collection().insertOne(document);
         response.status(201).json({ success: true, data: publicRecord({ _id: result.insertedId, ...document }) });
       } catch (error) {
@@ -88,7 +94,8 @@ export function resourceController(resource, schema, options = {}) {
         if (!id) throw httpError(400, 'id is required');
         const existing = await collection().findOne(idQuery(id));
         if (!existing) return next(httpError(404, `${resource} not found`));
-        const updates = { ...schema({ ...existing, ...request.body }), updatedAt: new Date() };
+        const body = USER_OWNED_RESOURCES.has(resource) && request.user?.id && !request.body.user_id ? { ...request.body, user_id: request.user.id } : request.body;
+        const updates = { ...schema({ ...existing, ...body }), updatedAt: new Date() };
         const result = await collection().findOneAndUpdate(idQuery(id), { $set: updates }, { returnDocument: 'after' });
         response.json({ success: true, data: publicRecord(result) });
       } catch (error) {
