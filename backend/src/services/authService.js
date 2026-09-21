@@ -49,3 +49,4 @@ export async function getUserById(id) {
   const user = await getDb().collection('users').findOne({ _id: new ObjectId(id) });
   return publicUser(user);
 }
+
