@@ -16,13 +16,13 @@ export default function DestinationDetail() {
 
   useEffect(() => {
     api.get(`/api/v1/destinations?id=${id}`).then(setData).catch(console.error).finally(() => setLoading(false));
-    if (user) api.get('/api/v1/favorites').then(f => setFav(f.some(x => x.target_type === 'destinations' && x.target_id === Number(id))));
+    if (user) api.get('/api/v1/favorites').then(r => setFav((r.data || []).some(x => x.target_type === 'destinations' && x.target_id === Number(id))));
   }, [id, user]);
 
   const toggleFav = async () => {
     if (!user) return;
-    const r = await api.post('/api/v1/favorites', { target_type: 'destinations', target_id: Number(id) });
-    setFav(r.favorited);
+    await api.post('/api/v1/favorites', { target_type: 'destinations', target_id: Number(id) });
+    setFav(true);
   };
 
   if (loading || !data) return <Loader />;
@@ -80,3 +80,4 @@ export default function DestinationDetail() {
     </div>
   );
 }
+

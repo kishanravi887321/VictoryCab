@@ -22,13 +22,13 @@ export default function HotelDetail() {
 
   useEffect(() => {
     api.get(`/api/v1/hotels?id=${id}`).then(setData).finally(() => setLoading(false));
-    if (user) api.get('/api/v1/favorites').then(f => setFav(f.some(x => x.target_type === 'hotels' && x.target_id === Number(id))));
+    if (user) api.get('/api/v1/favorites').then(r => setFav((r.data || []).some(x => x.target_type === 'hotels' && x.target_id === Number(id))));
   }, [id, user]);
 
   const toggleFav = async () => {
     if (!user) return;
-    const r = await api.post('/api/v1/favorites', { target_type: 'hotels', target_id: Number(id) });
-    setFav(r.favorited);
+    await api.post('/api/v1/favorites', { target_type: 'hotels', target_id: Number(id) });
+    setFav(true);
   };
 
   const book = async (e) => {
@@ -107,3 +107,4 @@ export default function HotelDetail() {
     </div>
   );
 }
+
