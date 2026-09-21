@@ -1,5 +1,5 @@
-import { createHash } from 'node:crypto';
 import { httpError } from '../utils/httpError.js';
+import { hashPassword } from '../utils/password.js';
 
 const ROLES = new Set(['TRAVELLER', 'BUSINESS', 'BUSINESS_OWNER', 'TOUR_GUIDE', 'TRAVEL_AGENT', 'ADMIN', 'SUPER_ADMIN']);
 const BUSINESS_STATUSES = new Set(['PENDING', 'VERIFIED', 'REJECTED', 'SUSPENDED']);
@@ -36,10 +36,6 @@ function normalizeEmail(value) {
   return email;
 }
 
-function hashPassword(password) {
-  if (!password) return undefined;
-  return createHash('sha256').update(String(password)).digest('hex');
-}
 
 export function userSchema(input = {}) {
   const role = cleanString(input.role)?.toUpperCase() || 'TRAVELLER';
@@ -184,14 +180,16 @@ export function bookingSchema(input = {}) {
 export function reviewSchema(input = {}) {
   const rating = optionalNumber(input.rating);
   if (!rating || rating < 1 || rating > 5) throw httpError(400, 'rating must be between 1 and 5');
+  const action = cleanString(input.action)?.toUpperCase();
+  const status = action === 'APPROVE' ? 'PUBLISHED' : action === 'REJECT' ? 'REJECTED' : cleanString(input.status) || 'PUBLISHED';
   return {
     user_id: cleanString(input.user_id),
     target_type: requiredString(input, 'target_type'),
     target_id: input.target_id,
     rating,
     comment: cleanString(input.comment),
-    reported: Boolean(input.reported),
-    status: cleanString(input.status) || 'PUBLISHED'
+    reported: action === 'APPROVE' ? false : Boolean(input.reported),
+    status
   };
 }
 
@@ -216,5 +214,6 @@ export function tripSchema(input = {}) {
     itinerary: Array.isArray(input.itinerary) ? input.itinerary : []
   };
 }
+
 
 
